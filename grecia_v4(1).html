@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang='es'>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Grecia v4</title>
+<style>
+body{margin:0;font-family:Arial;background:linear-gradient(#e8f2ff,#c9ddff)}
+header{background:#1f4b99;color:white;text-align:center;padding:14px}
+.wrap{padding:20px}
+.info{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:15px}
+.board{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.zone{background:#fffdf8;border:3px solid #2f5fb3;border-radius:14px;min-height:260px;padding:10px}
+.zone h3{text-align:center}
+.cards{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px}
+.card{width:170px;background:white;border:2px solid #2f5fb3;border-radius:12px;padding:10px;text-align:center;cursor:grab}
+.card:hover{transform:scale(1.04)}
+.ok{background:#c9efc9}
+#msg{text-align:center;height:28px;font-weight:bold}
+@media(max-width:900px){.board{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+
+<body>
+<header><h1>🏺 GRECIA - Organizador Visual</h1></header>
+
+<div class='wrap'>
+
+<div class='info'>
+<div><b>Aciertos:</b> <span id='s'>0</span>/14</div>
+<progress id='p' max='14' value='0'></progress>
+<button onclick='location.reload()'>🔄 Reiniciar</button>
+</div>
+
+<div class='board'>
+<div class='zone' data-t='q'><h3>👤 ¿Quién?</h3></div>
+<div class='zone' data-t='d'><h3>📍 ¿Dónde?</h3></div>
+<div class='zone' data-t='i'><h3>📖 ¿Qué pasó primero?</h3></div>
+<div class='zone' data-t='f'><h3>🏆 ¿Resultado final?</h3></div>
+</div>
+
+<div id='msg'></div>
+<div class='cards' id='cards'></div>
+
+</div>
+
+<script>
+
+const datos=[
+['🏛️','Zeus, el dios del Olimpo','q'],
+['🧠','Atenea, diosa de la sabiduría','q'],
+['🏃‍♂️','Un atleta griego','q'],
+['👥','Los ciudadanos de Atenas','q'],
+['🗿','Un héroe griego','q'],
+
+['🏛️','En Atenas','d'],
+['🇬🇷','En Grecia','d'],
+['🌊','En el Mar Egeo','d'],
+
+['⛵','Navegaron por el Mar Egeo','i'],
+['🏙️','Llegaron a una nueva ciudad','i'],
+['💭','Pensaban y buscaban la verdad','i'],
+['🏟️','Celebraron los Juegos Olímpicos','i'],
+['📜','Escribían y contaban sus historias','i'],
+['🏺','Usaban cerámicas','i'],
+
+['🏆','Ganaron y fueron honrados','f']
+];
+
+datos.sort(()=>Math.random()-.5);
+
+let drag=null,ok=0;
+
+datos.forEach(x=>{
+let c=document.createElement('div');
+c.className='card';
+c.draggable=true;
+c.dataset.t=x[2];
+
+c.innerHTML='<div style="font-size:38px">'+x[0]+'</div><b>'+x[1]+'</b>';
+
+c.ondragstart=()=>drag=c;
+
+cards.appendChild(c);
+});
+
+document.querySelectorAll('.zone').forEach(z=>{
+z.ondragover=e=>e.preventDefault();
+
+z.ondrop=e=>{
+e.preventDefault();
+if(!drag)return;
+
+if(drag.dataset.t===z.dataset.t){
+drag.draggable=false;
+drag.classList.add('ok');
+z.appendChild(drag);
+ok++;
+s.textContent=ok;
+p.value=ok;
+msg.textContent='✅ ¡Correcto!';
+if(ok===14)setTimeout(()=>alert('🏺 ¡Has completado Grecia!'),200);
+}else{
+msg.textContent='❌ Esa tarjeta no va ahí';
+}
+setTimeout(()=>msg.textContent='',900);
+};
+});
+
+</script>
+
+</body>
+</html>
